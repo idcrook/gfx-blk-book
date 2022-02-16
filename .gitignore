@@ -1,0 +1,8 @@
+# build or debug related
+*.obj
+*.exe
+*.smp 
+*.err
+
+# captured wdis output 
+*.dis

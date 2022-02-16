@@ -1,0 +1,85 @@
+Module: D:\CH17\L172PRO.CPP
+GROUP: 'DGROUP' CONST,CONST2,_DATA,_BSS
+
+Segment: _TEXT BYTE USE32 000000AB bytes
+0000                          void near draw_pixel( int unsigned, int unsigned, int unsigned ):
+0000    68 04 00 00 00            push        0x00000004 
+0005    E8 00 00 00 00            call        __CHK 
+000A    69 D2 40 01 00 00         imul        edx,0x00000140 
+0010    01 D0                     add         eax,edx 
+0012    66 0F AF 05 00 00 00 00
+                                  imul        ax,word ptr int unsigned near magnifier 
+001A    0F B7 C0                  movzx       eax,ax 
+001D    31 D2                     xor         edx,edx 
+001F    8E EA                     mov         gs,edx 
+0021    05 00 00 0A 00            add         eax,0x000a0000 
+0026    65 88 18                  mov         byte ptr gs:[eax],bl 
+0029    83 3D 00 00 00 00 02      cmp         dword ptr int unsigned near magnifier,0x00000002 
+0030    75 12                     jne         L$1 
+0032    65 88 58 01               mov         byte ptr gs:0x1[eax],bl 
+0036    65 88 98 40 01 00 00      mov         byte ptr gs:0x140[eax],bl 
+003D    65 88 98 41 01 00 00      mov         byte ptr gs:0x141[eax],bl 
+0044                          L$1:
+0044    C3                        ret         
+
+Routine Size: 69 bytes,    Routine Base: _TEXT + 0000
+
+0045                          void near enter_display_mode():
+0045    68 2C 00 00 00            push        0x0000002c 
+004A    E8 00 00 00 00            call        __CHK 
+004F    53                        push        ebx 
+0050    52                        push        edx 
+0051    C8 1C 00 00               enter       0x001c,0x00 
+0055    66 C7 45 E4 13 00         mov         word ptr -0x1c[ebp],0x0013 
+005B                          L$2:
+005B    8D 5D E4                  lea         ebx,-0x1c[ebp] 
+005E    8D 55 E4                  lea         edx,-0x1c[ebp] 
+0061    B8 10 00 00 00            mov         eax,0x00000010 
+0066    E8 00 00 00 00            call        int386_ 
+006B    C9                        leave       
+006C    5A                        pop         edx 
+006D    5B                        pop         ebx 
+006E    C3                        ret         
+
+Routine Size: 42 bytes,    Routine Base: _TEXT + 0045
+
+006F                          void near exit_display_mode():
+006F    68 2C 00 00 00            push        0x0000002c 
+0074    E8 00 00 00 00            call        __CHK 
+0079    53                        push        ebx 
+007A    52                        push        edx 
+007B    C8 1C 00 00               enter       0x001c,0x00 
+007F    66 C7 45 E4 03 00         mov         word ptr -0x1c[ebp],0x0003 
+0085    EB D4                     jmp         L$2 
+
+Routine Size: 24 bytes,    Routine Base: _TEXT + 006F
+
+0087                          void near show_text( int, int, char near * ):
+0087    68 08 00 00 00            push        0x00000008 
+008C    E8 00 00 00 00            call        __CHK 
+0091    51                        push        ecx 
+0092    89 C1                     mov         ecx,eax 
+0094    89 D0                     mov         eax,edx 
+0096    83 C1 1A                  add         ecx,0x0000001a 
+0099    0F BF D1                  movsx       edx,cx 
+009C    98                        cwde        
+009D    E8 00 00 00 00            call        _settextposition_ 
+00A2    89 D8                     mov         eax,ebx 
+00A4    E8 00 00 00 00            call        puts_ 
+00A9    59                        pop         ecx 
+00AA    C3                        ret         
+
+Routine Size: 36 bytes,    Routine Base: _TEXT + 0087
+
+No disassembly errors
+
+Segment: CONST BYTE USE32 00000000 bytes
+
+Segment: CONST2 BYTE USE32 00000000 bytes
+
+Segment: _DATA BYTE USE32 00000000 bytes
+
+Segment: _BSS BYTE USE32 00000000 bytes
+
+BSS Size: 0 bytes
+
