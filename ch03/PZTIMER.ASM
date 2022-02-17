@@ -211,6 +211,7 @@ ZTimerOn     endp
 ;********************************************************************
 ;* Routine called to stop timing and get count.                     *
 ;********************************************************************
+; HIGH and LOW operators seem to be broken in OpenWatcom 1.9 
 FLAGS_IF_HMASK    EQU 0x02 
 FLAGS_IF_HINVMASK EQU FLAGS_IF_HMASK xor 0xFF
 
@@ -278,9 +279,10 @@ ZTimerOff proc     near
      pop    ax                    ; retrieve flags when called
      mov    ch,cs:[OriginalFlags] ; get back the original upper
                                   ; byte of the FLAGS register
-     ;; and    ch,not 0fdh           ; only care about original
-     ;;avoids Warning! W041: Immediate constant too large
-     ;; and    ch, 0FFh xor 0FDh     ; only care about original
+     ;;and    ch,not 0fdh           ; only care about original ; W041: Immediate constant too large
+     ;;and    ch, low not 0fdh      ; Error! E040: Invalid instruction operands
+     ;;and    ch, low (not 0fdh)      ; Error! E040: Invalid instruction operands
+     ;;and    ch, 0FFh xor 0FDh     ; only care about original ; avoids W041:
      and    ch,FLAGS_IF_HMASK     ; only care about original
                                   ; interrupt flag...
      and    ah,FLAGS_IF_HINVMASK  ; ...keep all other flags in
