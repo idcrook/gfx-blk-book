@@ -1,4 +1,3 @@
-
 ; Animates four balls bouncing around a playfield by using
 ; page flipping. Playfield is panned smoothly both horizontally
 ; and vertically.
