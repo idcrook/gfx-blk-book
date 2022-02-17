@@ -15,9 +15,9 @@ extern unsigned int magnifier;
 #define SCREEN_MEMADDR_32BIT  0xA0000L
 #define SCREEN_MEMADDR_16BIT  0xA0000000L
 
-// If we are using 16-BIT compiler FAR required for these raw pointer types
-typedef unsigned char  far byte;
-typedef unsigned short far word;
+// When using 16-BIT compiler FAR required in raw pointer types
+typedef unsigned char  byte;
+typedef unsigned short word;
 
 #ifdef __WATCOMC__
 static inline void just_int86(unsigned char c,union REGS *r1,union REGS *r2) {
@@ -29,7 +29,6 @@ static inline void just_int86(unsigned char c,union REGS *r1,union REGS *r2) {
 }
 #endif
 
-
 /* Mode 13h draw pixel function. Pixels are of width & height
    specified by magnifier. */
 void draw_pixel(unsigned int x, unsigned int y, unsigned int color)
@@ -37,7 +36,7 @@ void draw_pixel(unsigned int x, unsigned int y, unsigned int color)
 #ifdef __386__
    byte *VGA=(byte *) (SCREEN_MEMADDR_32BIT); 
 #else
-   byte *VGA=(byte *) (SCREEN_MEMADDR_16BIT); 
+   byte *VGA=(byte far *) (SCREEN_MEMADDR_16BIT); 
 #endif
 
    unsigned short offset = ((y*SCREEN_WIDTH_IN_BYTES+x)*magnifier);
