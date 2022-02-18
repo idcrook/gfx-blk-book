@@ -9,3 +9,6 @@
 
 # saved screenshot
 *.scr
+
+# VS Code local
+/.vscode
