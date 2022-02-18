@@ -59,8 +59,7 @@ else
 endif
       endm
 ;
-;_TEXT segment byte public 'CODE'
-_TEXT segment 'CODE'
+_TEXT segment byte public 'CODE'
        assume cs:_TEXT, ds:_DATA
 ;
 ; Sets up 360x480 256-color mode.
@@ -70,8 +69,8 @@ _TEXT segment 'CODE'
 ;
 ; Returns: nothing
 ;
-      public Set360x480Mode_
-Set360x480Mode_ proc near
+      public _Set360x480Mode
+_Set360x480Mode proc near
       push   si                 ;preserve C register vars
       push   di
       mov    ax,12h             ; start with mode 12h
@@ -105,13 +104,16 @@ Set360x480Mode_ proc near
       cld
       mov     si,offset vptbl
       mov     cx,((offset vpend)-(offset vptbl)) shr 1
-@b:   lodsw
+; @b:   lodsw
+;       out     dx,ax
+;       loop    @b
+___b:   lodsw
       out     dx,ax
-      loop    @b
+      loop    ___b
       pop     di                ;restore C register vars
       pop     si
       ret
-Set360x480Mode_ endp
+_Set360x480Mode endp
 ;
 ; Draws a pixel in the specified color at the specified
 ; location in 360x480 256-color mode.
@@ -129,7 +131,7 @@ Color dw   ?            ;color in which to draw (in the
                         ; range 0-255; upper byte ignored)
 DParms     ends
 ;
-;      public _Draw360x480Dot
+      public _Draw360x480Dot
 _Draw360x480Dot proc near
       push  bp            ;preserve caller's BP
       mov   bp,sp         ;point to stack frame
@@ -177,7 +179,7 @@ ReadX dw   ?                ;X coordinate from which to read
 ReadY dw   ?                ;Y coordinate from which to read
 RParms     ends
 ;
-;      public _Read360x480Dot
+      public _Read360x480Dot
 _Read360x480Dot proc near
       push  bp              ;preserve caller's BP
       mov   bp,sp           ;point to stack frame
@@ -209,5 +211,4 @@ _Read360x480Dot proc near
        ret
 _Read360x480Dot  endp
 _TEXT  ends
- ;      end
-end
+       end

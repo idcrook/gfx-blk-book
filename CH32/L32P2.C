@@ -10,22 +10,40 @@
  *
  * By Michael Abrash
  */
-#include <stdio.h>
-#include <dos.h>                 /* contains geninterrupt */
+#include <stddef.h>              /* cdecl: underscore leading symbol */
+#include <stdio.h>               /* scanf() */
+#include <dos.h>                 /* int86() */
+
+
 
 #define TEXT_MODE       0x03
 #define BIOS_VIDEO_INT  0x10
 #define X_MAX           360      /* working screen width */
 #define Y_MAX           480      /* working screen height */
 
+#if __WATCOMC__
+extern void __cdecl Draw360x480Dot();
+extern void __cdecl Set360x480Mode();
+#else
 extern void Draw360x480Dot();
 extern void Set360x480Mode();
+#endif
+
+#ifdef __WATCOMC__
+static inline void just_int86(unsigned char c,union REGS *r1,union REGS *r2) {
+# ifdef __386__
+    int386(c,r1,r2);
+# else
+    int86(c,r1,r2);
+# endif
+}
+#endif
 
 /*
  * Draws a line in octant 0 or 3 ( |DeltaX| >= DeltaY ).
  * |DeltaX|+1 points are drawn.
  */
-void Octant0(X0, Y0, DeltaX, DeltaY, XDirection, Color)
+void Octant0(X0, Y0, DeltaX, DeltaY, XDirection, Color) 
 unsigned int X0, Y0;          /* coordinates of start of the line */
 unsigned int DeltaX, DeltaY;  /* length of the line */
 int XDirection;               /* 1 if line is drawn left to right,
@@ -63,7 +81,7 @@ int Color;                    /* color in which to draw line */
  * Draws a line in octant 1 or 2 ( |DeltaX| < DeltaY ).
  * |DeltaY|+1 points are drawn.
  */
-void Octant1(X0, Y0, DeltaX, DeltaY, XDirection, Color)
+void Octant1(X0, Y0, DeltaX, DeltaY, XDirection, Color) 
 unsigned int X0, Y0;          /* coordinates of start of the line */
 unsigned int DeltaX, DeltaY;  /* length of the line */
 int XDirection;               /* 1 if line is drawn left to right,
@@ -150,8 +168,10 @@ void VectorsUp(XCenter, YCenter, XLength, YLength)
 int XCenter, YCenter;   /* center of rectangle to fill */
 int XLength, YLength;   /* distance from center to edge
                            of rectangle */
+//int Color;              /* color in which to draw line */
 {
    int WorkingX, WorkingY, Color = 1;
+   // int WorkingX, WorkingY;
 
    /* Lines from center to top of rectangle */
    WorkingX = XCenter - XLength;
@@ -178,6 +198,22 @@ int XLength, YLength;   /* distance from center to edge
       EVGALine(XCenter, YCenter, WorkingX, WorkingY, Color++);
 }
 
+
+void exit_display_mode()
+{
+   union REGS regset;
+
+#ifdef __WATCOMC__
+    regset.w.ax = TEXT_MODE;
+#else
+    regset.x.ax = TEXT_MODE;
+#endif
+
+   just_int86(0x10, &regset, &regset);
+}   
+
+
+
 /*
  * Sample program to draw four rectangles full of lines.
  */
@@ -188,15 +224,23 @@ void main()
    Set360x480Mode();
 
    /* Draw each of four rectangles full of vectors */
-   VectorsUp(X_MAX / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4, 1);
-   VectorsUp(X_MAX * 3 / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4, 2);
-   VectorsUp(X_MAX / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4, 3);
-   VectorsUp(X_MAX * 3 / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4, 4);
+   // VectorsUp(X_MAX / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4, 1);
+   // VectorsUp(X_MAX * 3 / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4, 2);
+   // VectorsUp(X_MAX / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4, 3);
+   // VectorsUp(X_MAX * 3 / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4, 4);
+   VectorsUp(X_MAX / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4);
+   VectorsUp(X_MAX * 3 / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4);
+   VectorsUp(X_MAX / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4);
+   VectorsUp(X_MAX * 3 / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4);
 
    /* Wait for the enter key to be pressed */
    scanf("%c", &temp);
 
    /* Back to text mode */
+#ifdef __WATCOMC__
+   exit_display_mode();
+#else
    _AX = TEXT_MODE;
-   geninterrupt(BIOS_VIDEO_INT);
+   geninterrupt(BIOS_VIDEO_INT);   
+#endif
 }
