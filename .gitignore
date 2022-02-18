@@ -6,3 +6,6 @@
 
 # captured wdis output 
 *.dis
+
+# saved screenshot
+*.scr
