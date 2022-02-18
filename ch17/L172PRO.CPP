@@ -36,11 +36,11 @@ void draw_pixel(unsigned int x, unsigned int y, unsigned int color)
 #ifdef __386__
    byte *VGA=(byte *) (SCREEN_MEMADDR_32BIT); 
 #else
-   byte *VGA=(byte far *) (SCREEN_MEMADDR_16BIT); 
+   byte far *VGA=(byte far *) (SCREEN_MEMADDR_16BIT); 
 #endif
 
    unsigned short offset = ((y*SCREEN_WIDTH_IN_BYTES+x)*magnifier);
-   byte *scr_ptr = VGA + offset;
+   byte far *scr_ptr = VGA + offset;
 
    scr_ptr[0] = color;
    if (magnifier == 2) { 
