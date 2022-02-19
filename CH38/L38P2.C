@@ -49,11 +49,13 @@ void DrawHorizontalLineList(struct HLineList * HLineListPtr,
 static void DrawPixel(int X, int Y, int Color) {
    byte far *ScreenPtr;
 
-#ifdef __TURBOC__
+#if defined(__TURBOC__) || defined(__WATCOMC__)
    ScreenPtr = MK_FP(SCREEN_SEGMENT, Y * SCREEN_WIDTH + X);
 #else    /* MSC 5.0 */
  #ifdef __WATCOMC__
    ScreenPtr = VGA + Y * SCREEN_WIDTH + X ;
+   // The follow works in Watcom too!
+   //ScreenPtr = MK_FP(SCREEN_SEGMENT, Y * SCREEN_WIDTH + X);
  #else
    FP_SEG(ScreenPtr) = SCREEN_SEGMENT;
    FP_OFF(ScreenPtr) = Y * SCREEN_WIDTH + X;
