@@ -5,10 +5,8 @@ del *.obj
 del *.smp
 
 wcl -q -d1 -bt=dos  -fo=L39P1.obj -c L39P1.c
-@REM wcl -q -d1 -bt=dos  -fo=L39P2.obj -c L39P2.c
-
 @REM reuse from chapter 38
 wcl -q -d1 -bt=dos  -fo=L38P1.obj -c L38P1.c
 wcl -q -d1 -bt=dos  -fo=L38P3.obj -c L38P3.c
 
-wcl -d1 -ms -l=dos -fe=L39P1.exe L38P3.obj L39P1.obj L38P1.obj
+wcl -d1 -mc -l=dos -fe=L39P1.exe L38P3.obj L39P1.obj L38P1.obj
