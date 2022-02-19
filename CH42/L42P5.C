@@ -3,6 +3,7 @@
  * Tested with Borland C++ in C compilation mode and the small model.
  */
 #include <dos.h>
+#include <conio.h>
 
 /* Screen dimension globals, used in main program to scale */
 int ScreenWidthInPixels = 640;
@@ -24,8 +25,12 @@ void DrawPixel(int X, int Y, int Color)
    /* Upper nibble is read bank #, lower nibble is write bank # */
    outp(GC_SEGMENT_SELECT, (Bank << 4) | Bank);
    /* Draw into the bank */
+#if defined(__TURBOC__) || defined(__WATCOMC__)
+   ScreenPtr = MK_FP(SCREEN_SEGMENT,(unsigned int) BitmapAddress);
+#else   
    FP_SEG(ScreenPtr) = SCREEN_SEGMENT;
    FP_OFF(ScreenPtr) = (unsigned int) BitmapAddress;
+#endif
    *ScreenPtr = Color;
 }
 
@@ -35,6 +40,6 @@ void SetMode()
    union REGS regset;
 
    /* Set to 640x480 256-color graphics mode */
-   regset.x.ax = 0x002E;
+   regset.w.ax = 0x002E;
    int86(0x10, &regset, &regset);
 }
