@@ -32,7 +32,8 @@ void main() {
   union REGS regset;
 
   /* Set the display to VGA mode 13h, 320x200 256-color mode */
-  regset.x.ax = 0x0013;
+//   regset.x.ax = 0x0013;
+  regset.w.ax = 0x0013;
   int86(0x10, &regset, &regset);
 
   /* Draw three complex polygons */
@@ -73,6 +74,7 @@ void main() {
   getch();    /* wait for a keypress */
 
   /* Return to text mode and exit */
-  regset.x.ax = 0x0003;
+//   regset.x.ax = 0x0003;
+  regset.w.ax = 0x0003;
   int86(0x10, &regset, &regset);
 }

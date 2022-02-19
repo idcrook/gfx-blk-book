@@ -19,6 +19,7 @@
    discussion of faster nonconvex handling. */
 
 #include <stdio.h>
+#include <stdlib.h>  /* abs() prototype */
 #include <math.h>
 #ifdef __TURBOC__
 #include <alloc.h>
@@ -41,7 +42,11 @@ struct EdgeState {
   int Count;
 };
 
+#if defined(USE_ASM_HLINELIST)
+extern void __cdecl DrawHorizontalLineSeg(int, int, int, int);
+#else
 extern void DrawHorizontalLineSeg(int, int, int, int);
+#endif
 extern int FillConvexPolygon(struct PointListHeader *, int, int, int);
 static void BuildGET(struct PointListHeader *, struct EdgeState *, int, int);
 static void MoveXSortedToAET(int);
