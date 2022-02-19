@@ -9,7 +9,7 @@
 SCREEN_WIDTH        equ   320
 SCREEN_SEGMENT      equ   0a000h
 
-HLinestruc
+HLine     struc
 XStart        dw   ?          ;X coordinate of leftmost pixel in line
 XEnd          dw   ?          ;X coordinate of rightmost pixel in line
 HLine         ends

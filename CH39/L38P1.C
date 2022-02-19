@@ -35,7 +35,11 @@
    else                                                              \
       Index = (Index - 1 + VertexList->Length) % VertexList->Length;
 
+#if !defined(USE_DRAW_HLINELIST_ASM)
 extern void DrawHorizontalLineList(struct HLineList *, int);
+#else
+extern void __cdecl DrawHorizontalLineList(struct HLineList *, int);
+#endif
 
 #if !defined(USE_CH39_SCANEDGE)
 static void ScanEdge(int, int, int, int, int, int, struct HLine **);
