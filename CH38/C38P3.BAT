@@ -2,10 +2,10 @@
 del *.err 
 del *.obj
 @REM del *.dis
-del *.smp
+@REM del *.smp
 
 wcl -q -d1 -bt=dos  -fo=L38P1.obj -c L38P1.c
 wcl -q -d1 -bt=dos  -fo=L38P2.obj -c L38P2.c
 wcl -q -d1 -bt=dos  -fo=L38P3.obj -c L38P3.c
 
-wcl -d1 -ms -l=dos -fe=L36P2.exe L38P1 L38P2 L38P3
+wcl -d1 -ms -l=dos -fe=L36P3.exe L38P1 L38P2 L38P3

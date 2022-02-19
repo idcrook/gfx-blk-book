@@ -34,6 +34,7 @@ void main() {
   union REGS regset;
 
   /* Set the display to VGA mode 13h, 320x200 256-color mode */
+  regset.w.ax = 0x0013;   /* AH = 0 selects mode set function,
   regset.x.ax = 0x0013;   /* AH = 0 selects mode set function,
                              AL = 0x13 selects mode 0x13
                              when set as parameters for INT 0x10 */
@@ -86,6 +87,7 @@ void main() {
   getch();    /* wait for a keypress */
 
   /* Return to text mode and exit */
-  regset.x.ax = 0x0003;   /* AL = 3 selects 80x25 text mode */
+  regset.w.ax = 0x0003;   /* AL = 3 selects 80x25 text mode */
+//   regset.x.ax = 0x0003;   /* AL = 3 selects 80x25 text mode */
   int86(0x10, &regset, &regset);
 }
