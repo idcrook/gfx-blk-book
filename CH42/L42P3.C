@@ -13,8 +13,12 @@ void DrawPixel(int X, int Y, int Color)
 #define SCREEN_SEGMENT  0xA000
    unsigned char far *ScreenPtr;
 
+#if defined(__TURBOC__) || defined(__WATCOMC__)
+   ScreenPtr = MK_FP(SCREEN_SEGMENT,(unsigned int) Y * ScreenWidthInPixels + X);
+#else
    FP_SEG(ScreenPtr) = SCREEN_SEGMENT;
    FP_OFF(ScreenPtr) = (unsigned int) Y * ScreenWidthInPixels + X;
+#endif 
    *ScreenPtr = Color;
 }
 
@@ -24,6 +28,6 @@ void SetMode()
    union REGS regset;
 
    /* Set to 320x200 256-color graphics mode */
-   regset.x.ax = 0x0013;
+   regset.w.ax = 0x0013;
    int86(0x10, &regset, &regset);
 }

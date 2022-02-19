@@ -79,7 +79,7 @@ void main()
    }
    getch();                /* wait for a key press */
 
-   regset.x.ax = 0x0003;   /* AL = 3 selects 80x25 text mode */
+   regset.w.ax = 0x0003;   /* AL = 3 selects 80x25 text mode */
    int86(0x10, &regset, &regset);   /* return to text mode */
 }
 
@@ -106,20 +106,23 @@ void SetPalette(struct WuColor * WColors)
 
    for (i=0; i<NUM_WU_COLORS; i++) {
       for (j=0; j<WColors[i].NumLevels; j++) {
-         PaletteBlock[j][0] = GammaTable[((double)WColors[i].MaxRed * (1.0 -
-               (double)j / (double)(WColors[i].NumLevels - 1))) + 0.5];
-         PaletteBlock[j][1] = GammaTable[((double)WColors[i].MaxGreen * (1.0 -
-               (double)j / (double)(WColors[i].NumLevels - 1))) + 0.5];
-         PaletteBlock[j][2] = GammaTable[((double)WColors[i].MaxBlue * (1.0 -
-               (double)j / (double)(WColors[i].NumLevels - 1))) + 0.5];
+         PaletteBlock[j][0] = GammaTable[(unsigned short)(((double)WColors[i].MaxRed * (1.0 -
+               (double)j / (double)(WColors[i].NumLevels - 1))) + 0.5)];
+         PaletteBlock[j][1] = GammaTable[(unsigned short)(((double)WColors[i].MaxGreen * (1.0 -
+               (double)j / (double)(WColors[i].NumLevels - 1))) + 0.5)];
+         PaletteBlock[j][2] = GammaTable[(unsigned short)(((double)WColors[i].MaxBlue * (1.0 -
+               (double)j / (double)(WColors[i].NumLevels - 1))) + 0.5)];
       }
       /* Now set up the palette to do Wu antialiasing for this color */
-      regset.x.ax = 0x1012;   /* set block of DAC registers function */
-      regset.x.bx = WColors[i].BaseColor;   /* first DAC location to load */
-      regset.x.cx = WColors[i].NumLevels;   /* # of DAC locations to load */
-      regset.x.dx = (unsigned int)PaletteBlock; /* offset of array from which
+      regset.w.ax = 0x1012;   /* set block of DAC registers function */
+      regset.w.bx = WColors[i].BaseColor;   /* first DAC location to load */
+      regset.w.cx = WColors[i].NumLevels;   /* # of DAC locations to load */
+      regset.w.dx = (unsigned int)PaletteBlock; /* offset of array from which
                                                    to load RGB settings */
-      sregset.es = _DS; /* segment of array from which to load settings */
+        //   sregset.es = _DS; /* segment of array from which to load settings */
+      segread( &sregset );  
+      sregset.es = FP_SEG(&PaletteBlock);
+
       int86x(0x10, &regset, &regset, &sregset); /* load the palette block */
    }
 }
