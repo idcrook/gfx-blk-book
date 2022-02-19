@@ -6,7 +6,11 @@
 #include <conio.h>
 
 void SetPalette(struct WuColor *);
+#if defined(USE_ASM_DRAWWULINE)
+extern void __cdecl DrawWuLine(int, int, int, int, int, int, unsigned int);
+#else
 extern void DrawWuLine(int, int, int, int, int, int, unsigned int);
+#endif
 extern void DrawLine(int, int, int, int, int);
 extern void SetMode(void);
 extern int ScreenWidthInPixels;  /* screen dimension globals */
