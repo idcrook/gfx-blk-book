@@ -1,5 +1,5 @@
 /* Split screen VGA animation program. Performs page flipping in the
-top portion of the screen while displaying non_page flipped
+top portion of the screen while displaying non-page flipped
 information in the split screen at the bottom of the screen.
 Compiled with Borland C++ in C compilation mode. */
 
