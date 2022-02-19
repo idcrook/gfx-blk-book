@@ -36,7 +36,12 @@
       Index = (Index - 1 + VertexList->Length) % VertexList->Length;
 
 extern void DrawHorizontalLineList(struct HLineList *, int);
+
+#if !defined(USE_CH39_SCANEDGE)
 static void ScanEdge(int, int, int, int, int, int, struct HLine **);
+#else
+extern void ScanEdge(int, int, int, int, int, int, struct HLine **);
+#endif
 
 int FillConvexPolygon(struct PointListHeader * VertexList, int Color,
       int XOffset, int YOffset)
@@ -171,6 +176,7 @@ int FillConvexPolygon(struct PointListHeader * VertexList, int Color,
   return(1);
 }
 
+#if !defined(USE_CH39_SCANEDGE)
 /* Scan converts an edge from (X1,Y1) to (X2,Y2), not including the
    point at (X2,Y2). This avoids overlapping the end of one line with
    the start of the next, and causes the bottom scan line of the
@@ -205,3 +211,4 @@ static void ScanEdge(int X1, int Y1, int X2, int Y2, int SetXStart,
   }
   *EdgePointPtr = WorkingEdgePointPtr;   /* advance caller's ptr */
 }
+#endif
