@@ -1,6 +1,5 @@
 /* POLYGON.H: Header file for polygon-filling code, also includes
-   a number of useful items for 3-D animation. */
-
+   a number of useful items for 3D animation. */
 #define MAX_OBJECTS  100   /* max simultaneous # objects supported */
 #define MAX_POLY_LENGTH 4  /* four vertices is the max per poly */
 #define SCREEN_WIDTH 320
@@ -23,12 +22,13 @@
 #define DOUBLE_TO_FIXED(x) ((long) (x * 65536.0 + 0.5))
 
 typedef long Fixedpoint;
+typedef unsigned int TAngle;  /* angle in tenths of degrees */
 typedef Fixedpoint Xform[3][4];
 /* Describes a single 2D point */
-typedef struct { int X; int Y; } Point;
+typedef struct _Point { int X; int Y; } Point;
 /* Describes a single 3D point in homogeneous coordinates; the W
    coordinate isn't present, though; assumed to be 1 and implied */
-typedef struct { Fixedpoint X, Y, Z; } Point3;
+typedef struct _Point3 { Fixedpoint X, Y, Z; } Point3;
 typedef struct { int X; int Y; int Z; } IntPoint3;
 /* Describes a series of points (used to store a list of vertices that
    describe a polygon; each vertex is assumed to connect to the two
@@ -40,24 +40,27 @@ typedef struct { int XStart; int XEnd; } HLine;
 /* Describes a Length-long series of horizontal lines, all assumed to
    be on contiguous scan lines starting at YStart and proceeding
    downward (used to describe a scan-converted polygon to the
-   low-level hardware-dependent drawing code). */
+   low-level hardware-dependent drawing code) */
 typedef struct { int Length; int YStart; HLine * HLinePtr;} HLineList;
 typedef struct { int Left, Top, Right, Bottom; } Rect;
-/* structure describing one face of an object (one polygon) */
+/* Structure describing one face of an object (one polygon) */
 typedef struct { int * VertNums; int NumVerts; int Color; }  Face;
-typedef struct { double RotateX, RotateY, RotateZ; } RotateControl;
+typedef struct { TAngle RotateX, RotateY, RotateZ; } RotateControl;
 typedef struct { Fixedpoint MoveX, MoveY, MoveZ, MinX, MinY, MinZ,
    MaxX, MaxY, MaxZ; } MoveControl;
-/* fields common to every object */
+/* Fields common to every object */
 #define BASE_OBJECT                                              \
+   struct _Object *NextObject;                                   \
+   struct _Object *PreviousObject;                               \
+   Point3 CenterInView;    /* coord of center in view space */   \
    void (*DrawFunc)();     /* draws object */                    \
    void (*RecalcFunc)();   /* prepares object for drawing */     \
    void (*MoveFunc)();     /* moves object */                    \
    int RecalcXform;        /* 1 to indicate need to recalc */    \
    Rect EraseRect[2];      /* rectangle to erase in each page */
-/* basic object */
-typedef struct { BASE_OBJECT } Object;
-/* structure describing a polygon-based object */
+/* Basic object */
+typedef struct _Object { BASE_OBJECT } Object;
+/* Structure describing a polygon-based object */
 typedef struct {
    BASE_OBJECT
    int RDelayCount, RDelayCountBase; /* controls rotation speed */
@@ -78,14 +81,14 @@ typedef struct {
 extern void XformVec(Xform, Fixedpoint *, Fixedpoint *);
 extern void ConcatXforms(Xform, Xform, Xform);
 extern int FillConvexPolygon(PointListHeader *, int, int, int);
-extern void __cdecl Set320x240Mode(void);
-extern void __cdecl ShowPage(unsigned int);
-extern void __cdecl FillRectangleX(int, int, int, int, unsigned int, int);
+extern void Set320x240Mode(void);
+extern void ShowPage(unsigned int);
+extern void FillRectangleX(int, int, int, int, unsigned int, int);
 extern void XformAndProjectPObject(PObject *);
 extern void DrawPObject(PObject *);
-extern void AppendRotationX(Xform, double);
-extern void AppendRotationY(Xform, double);
-extern void AppendRotationZ(Xform, double);
+extern void AppendRotationX(Xform, TAngle);
+extern void AppendRotationY(Xform, TAngle);
+extern void AppendRotationZ(Xform, TAngle);
 // extern near Fixedpoint FixedMul(Fixedpoint, Fixedpoint);
 // extern near Fixedpoint FixedDiv(Fixedpoint, Fixedpoint);
 extern Fixedpoint __cdecl FixedMul(Fixedpoint, Fixedpoint);
@@ -93,8 +96,15 @@ extern Fixedpoint __cdecl FixedDiv(Fixedpoint, Fixedpoint);
 extern void InitializeFixedPoint(void);
 extern void RotateAndMovePObject(PObject *);
 extern void InitializeCubes(void);
+extern void InitializeBalls(void);
 extern int DisplayedPage, NonDisplayedPage, RecalcAllXforms;
 extern int NumObjects;
+extern Object ObjectListStart, ObjectListEnd;
 extern Xform WorldViewXform;
 extern Object *ObjectList[];
 extern Point3 CubeVerts[];
+extern void CosSin(TAngle, Fixedpoint *, Fixedpoint *);
+extern void AddObject(Object *);
+extern void SortObjects(void);
+extern void InitializeObjectList(void);
+
