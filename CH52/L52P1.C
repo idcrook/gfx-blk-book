@@ -1,6 +1,7 @@
 /* 3-D animation program to rotate 12 cubes. Uses fixed point. All C code
    tested with Borland C++ in C compilation mode and the small model. */
 
+#include <stdlib.h>
 #include <conio.h>
 #include <dos.h>
 #include "polygon.h"

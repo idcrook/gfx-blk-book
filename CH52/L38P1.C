@@ -36,22 +36,21 @@
       Index = (Index - 1 + VertexList->Length) % VertexList->Length;
 
 #if !defined(USE_ASM_HLINELIST)
-extern void DrawHorizontalLineList(struct HLineList *, int);
+extern void DrawHorizontalLineList(HLineList *, int);
 #else
-extern void __cdecl DrawHorizontalLineList(struct HLineList *, int);
+extern void __cdecl DrawHorizontalLineList(HLineList *, int);
 #endif
 
 #if defined(USE_CH39_SCANEDGE) || defined(USE_ASM_SCANEDGE)
  #if !defined(USE_ASM_SCANEDGE)
-extern void ScanEdge(int, int, int, int, int, int, struct HLine **);
+extern void ScanEdge(int, int, int, int, int, int, HLine **);
  #else
-extern void __cdecl ScanEdge(int, int, int, int, int, int, struct HLine **);
+extern void __cdecl ScanEdge(int, int, int, int, int, int, HLine **);
  #endif
 #else
-static void ScanEdge(int, int, int, int, int, int, struct HLine **);
+static void ScanEdge(int, int, int, int, int, int, HLine **);
 #endif
 
-//int FillConvexPolygon(struct PointListHeader * VertexList, int Color,
 int FillConvexPolygon(PointListHeader * VertexList, int Color,
       int XOffset, int YOffset)
 {
@@ -59,9 +58,9 @@ int FillConvexPolygon(PointListHeader * VertexList, int Color,
   int MinPoint_Y, MaxPoint_Y, TopIsFlat, LeftEdgeDir;
   int NextIndex, CurrentIndex, PreviousIndex;
   int DeltaXN, DeltaYN, DeltaXP, DeltaYP;
-  struct HLineList WorkingHLineList;
-  struct HLine *EdgePointPtr;
-  struct Point *VertexPtr;
+  HLineList WorkingHLineList;
+  HLine *EdgePointPtr;
+  Point *VertexPtr;
 
   /* Point to the vertex list */
   VertexPtr = VertexList->PointPtr;
@@ -136,7 +135,7 @@ int FillConvexPolygon(PointListHeader * VertexList, int Color,
 
   /* Get memory in which to store the line list we generate */
   if ((WorkingHLineList.HLinePtr =
-        (struct HLine *) (malloc(sizeof(struct HLine) *
+        ( HLine *) (malloc(sizeof( HLine) *
         WorkingHLineList.Length))) == NULL)
      return(0);  /* couldn't get memory for the line list */
 
@@ -193,11 +192,11 @@ int FillConvexPolygon(PointListHeader * VertexList, int Color,
    isn't drawn. For each scan line, the pixel closest to the scanned
    line without being to the left of the scanned line is chosen. */
 static void ScanEdge(int X1, int Y1, int X2, int Y2, int SetXStart,
-      int SkipFirst, struct HLine **EdgePointPtr)
+      int SkipFirst, HLine **EdgePointPtr)
 {
   int Y, DeltaX, DeltaY;
   double InverseSlope;
-  struct HLine *WorkingEdgePointPtr;
+  HLine *WorkingEdgePointPtr;
 
   /* Calculate X and Y lengths of the line and the inverse slope */
   DeltaX = X2 - X1;

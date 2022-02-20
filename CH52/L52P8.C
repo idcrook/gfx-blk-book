@@ -1,8 +1,13 @@
 /* Initializes the cubes and adds them to the object list. */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include "polygon.h"
+
+#if !defined(M_PI)
+ #define M_PI 3.14159265358979323846
+#endif
 
 #define ROT_6  (M_PI / 30.0)     /* rotate 6 degrees at a time */
 #define ROT_3  (M_PI / 60.0)     /* rotate 3 degrees at a time */
