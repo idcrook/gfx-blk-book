@@ -164,14 +164,14 @@ unsigned char Color;    /* color in which to draw line */
  * specified length and in varying colors, around the
  * specified rectangle center.
  */
-void VectorsUp(XCenter, YCenter, XLength, YLength)
+void VectorsUp(XCenter, YCenter, XLength, YLength, Color)
 int XCenter, YCenter;   /* center of rectangle to fill */
 int XLength, YLength;   /* distance from center to edge
                            of rectangle */
-//int Color;              /* color in which to draw line */
+int Color;              /* color in which to draw line */
 {
-   int WorkingX, WorkingY, Color = 1;
-   // int WorkingX, WorkingY;
+   // int WorkingX, WorkingY, Color = 1;
+   int WorkingX, WorkingY;
 
    /* Lines from center to top of rectangle */
    WorkingX = XCenter - XLength;
@@ -224,14 +224,14 @@ void main()
    Set360x480Mode();
 
    /* Draw each of four rectangles full of vectors */
-   // VectorsUp(X_MAX / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4, 1);
-   // VectorsUp(X_MAX * 3 / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4, 2);
-   // VectorsUp(X_MAX / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4, 3);
-   // VectorsUp(X_MAX * 3 / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4, 4);
-   VectorsUp(X_MAX / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4);
-   VectorsUp(X_MAX * 3 / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4);
-   VectorsUp(X_MAX / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4);
-   VectorsUp(X_MAX * 3 / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4);
+   VectorsUp(X_MAX / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4, 1);
+   VectorsUp(X_MAX * 3 / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4, 17);
+   VectorsUp(X_MAX / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4, 33);
+   VectorsUp(X_MAX * 3 / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4, 49);
+   // VectorsUp(X_MAX / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4);
+   // VectorsUp(X_MAX * 3 / 4, Y_MAX / 4, X_MAX / 4, Y_MAX / 4);
+   // VectorsUp(X_MAX / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4);
+   // VectorsUp(X_MAX * 3 / 4, Y_MAX * 3 / 4, X_MAX / 4, Y_MAX / 4);
 
    /* Wait for the enter key to be pressed */
    scanf("%c", &temp);

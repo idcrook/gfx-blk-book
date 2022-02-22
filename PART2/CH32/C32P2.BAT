@@ -5,6 +5,6 @@ del *.err
 del *.smp
 
 wasmr -wx -d1 -ms -fo=L32P1.obj L32P1
-WDIS L32P1.OBJ > L32P1.DIS
+@REM WDIS L32P1.OBJ > L32P1.DIS
 wcl -d1 -ms -l=dos -fe=L32P2.exe L32P2 L32P1.obj
-WDIS L32P2.OBJ > L32P2.DIS
+@REM WDIS L32P2.OBJ > L32P2.DIS
