@@ -49,7 +49,17 @@ X=0
        REPT 64
        db   63-X,0,0
 X=X+1
-ENDM
+       ENDM
+
+; The last 64 entries are increasingly strong pure red.
+X=0
+       REPT 64
+       db   X,0,0
+X=X+1
+       ENDM
+
+startColor    dw 4*3*16 
+loopCount     db 15
 
        .code
 Start:
@@ -59,9 +69,11 @@ Start:
 
                                    ;load the DAC registers with the
                                    ; color settings
+loadDACPalette:
        mov  ax,@data               ;point ES to the default
        mov  es,ax                  ; data segment
        mov  dx,offset ColorTable
+       add  dx, [startColor]       
                                    ;point ES:DX to the start of the
                                    ; block of RGB three-byte values
                                    ; to load into the DAC registers
@@ -76,6 +88,7 @@ Start:
                                    ;now fill the screen with
                                    ; concentric diamonds in all 256
                                    ; color attributes
+drawLines:
        mov  ax,0a000h              ;point DS to the display memory
        mov  ds,ax                  ; segment
                                    ;
@@ -131,9 +144,17 @@ Start:
                                    ; one column to the next)
        call FillBlock;draw it
 
-       mov  ah,1                   ;wait for a key
+       mov  ah,08h                   ;wait for a key
        int 21h;
 
+       mov  ax,@data               ;point ES to the default
+       mov  ds,ax   
+       sub  [startColor], 4*3      ;; advance 4 colors for next pass
+       cmp  [loopCount], 0
+       jz   Done
+       dec  [loopCount]     
+       jmp loadDACPalette
+Done:
        mov  ax,0003h               ;return to text mode
        int 10h;
 
