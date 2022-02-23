@@ -4,10 +4,10 @@ del *.obj
 @REM del *.dis
 del *.smp
 
-wcl -q -d1 -bt=dos  -fo=L41P1.obj -c L41P1.c
-wcl -q -d1 -bt=dos  -fo=L41P2.obj -c L41P2.c
+wcl -q -oneatx -d1 -bt=dos  -fo=L41P1.obj -c L41P1.c
+wcl -q -oneatx -d1 -bt=dos  -fo=L41P2.obj -c L41P2.c
 wasm -wx -d1 -ms -fo=L41P3.obj L41P3
-wcl -q -d1 -bt=dos  -fo=L41P4.obj -c L41P4.c
+wcl -q -oneatx -d1 -bt=dos  -fo=L41P4.obj -c L41P4.c
 wasm -wx -d1 -ms -fo=L39P4.obj L39P4
 wasm -wx -d1 -ms -fo=L40P5.obj L40P5
 

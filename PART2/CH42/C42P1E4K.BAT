@@ -17,5 +17,8 @@ wcl -q -d1 -bt=dos  -fo=L42P5.obj -c L42P5.c
 wcl -d1 -ms -l=dos -fe=L42P1E4K.exe L42P2.obj L42P1.obj   L42P4.obj L42P5.obj 
 
 @echo.
-@echo *** Requires Tseng Labs ET4000-based SuperVGAs emulation in dosbox-x
+@echo *** Requires Tseng Labs ET4000-based SuperVGAs emulation
+@echo *** For example, in dosbox-x.conf:
+@echo.
 @echo  machine = svga_et4000 
+@echo.
