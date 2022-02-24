@@ -12,10 +12,10 @@
 #define SCREEN_WIDTH    320
 #define SCREEN_SEGMENT  0xA000
 
-#if defined(__WATCOMC__)
-/* to work with far ptr */
-#define memset  _fmemset
-#endif
+// #if defined(__WATCOMC__)
+// /* to work with far ptr */
+// #define memset  _fmemset
+// #endif
 
 void DrawHorizontalLineList(struct HLineList * HLineListPtr,
       int Color)

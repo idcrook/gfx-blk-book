@@ -4,7 +4,7 @@ del *.obj
 @REM del *.dis
 del *.smp
 
-wcl -q -d1 -bt=dos  -fo=L39P1.obj -c L39P1.c
+wcl -q -d1 -mc -bt=dos  -fo=L39P1.obj -c L39P1.c
 wcl -q -d1 -bt=dos  -fo=L39P2.obj -c L39P2.c
 
 @REM reuse from chapter 38
