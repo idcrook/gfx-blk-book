@@ -358,8 +358,8 @@ CheckInRange:
         mov     ax,word ptr CosTable[bx] ;look up sine
         mov     dx,word ptr CosTable[bx+2]
         neg     bx              ;sin(Angle) = cos(90-Angle)
-        mov     cx,word ptr CosTable[bx+90*10*4+2] ;look up cosine
-        mov     bx,word ptr CosTable[bx+90*10*4]
+        mov     cx,word ptr CosTable[bx+(90*10*4)+2] ;look up cosine
+        mov     bx,word ptr CosTable[bx+(90*10*4)]
         jmp     CSDone
 
         align   ALIGNMENT
@@ -373,8 +373,8 @@ Quadrant1:
         neg     ax
         sbb     dx,0
         neg     bx              ;sin(Angle) = cos(90-Angle)
-        mov     cx,word ptr CosTable[bx+90*10*4+2] ;look up cosine
-        mov     bx,word ptr CosTable[bx+90*10*4]
+        mov     cx,word ptr CosTable[bx+(90*10*4)+2] ;look up cosine
+        mov     bx,word ptr CosTable[bx+(90*10*4)]
         jmp     short CSDone
 
         align   ALIGNMENT
@@ -388,8 +388,8 @@ BottomHalf:                     ;quadrant 2 or 3
         mov     ax,word ptr CosTable[bx] ;look up cosine
         mov     dx,word ptr CosTable[bx+2]
         neg     bx              ;sin(Angle) = cos(90-Angle)
-        mov     cx,word ptr CosTable[90*10*4+bx+2] ;look up sine
-        mov     bx,word ptr CosTable[90*10*4+bx]
+        mov     cx,word ptr CosTable[(90*10*4)+bx+2] ;look up sine
+        mov     bx,word ptr CosTable[(90*10*4)+bx]
         neg     cx              ;negative in this quadrant
         neg     bx
         sbb     cx,0
@@ -406,8 +406,8 @@ Quadrant2:
         neg     ax
         sbb     dx,0
         neg     bx              ;sin(Angle) = cos(90-Angle)
-        mov     cx,word ptr CosTable[90*10*4+bx+2] ;look up sine
-        mov     bx,word ptr CosTable[90*10*4+bx]
+        mov     cx,word ptr CosTable[(90*10*4)+bx+2] ;look up sine
+        mov     bx,word ptr CosTable[(90*10*4)+bx]
         neg     cx              ;negative in this quadrant
         neg     bx
         sbb     cx,0
