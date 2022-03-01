@@ -28,7 +28,7 @@ CSEG		SEGMENT	PARA  USE16
 
         ORG    100h
 start:    
-	mov	di,screen_data
+	mov	di, offset screen_data
 	xor	al,al
 	mov	cx,80*50*2
 	rep	stosb
@@ -43,7 +43,7 @@ start:
 	int	10h			; enable background intensity
 
 	mov	ax,1100h
-	mov	bp,DCh_pattern
+	mov	bp, offset DCh_pattern
 	mov	cx,1
 	mov	dx,0DCh
 	mov	bx,1000h
@@ -63,7 +63,7 @@ redraw_screen:
 	and	byte ptr [screen_data+si],8
 	or	byte ptr [screen_data+si],2
 
-	mov	si,screen_data
+	mov	si,offset screen_data
 	xor	di,di
 	mov	cx,50
 draw_screen:
@@ -135,8 +135,8 @@ cursor_down:
 
 next_generation:
 	call	clear_cursor
-	mov	si,screen_data+81
-	mov	di,screen_data+80*50+81
+	mov	si,offset screen_data+81
+	mov	di,offset screen_data+80*50+81
 	mov	cx,48
 process_screen:
 	push	cx
@@ -191,8 +191,8 @@ cell_ok:
 	push	es
 	push	ds
 	pop	es
-	mov	si,screen_data+80*50
-	mov	di,screen_data
+	mov	si, offset screen_data+80*50
+	mov	di, offset screen_data
 	mov	cx,80*50
 	rep	movsb
 	pop	es
@@ -230,8 +230,8 @@ DCh_pattern:
  	db 8 dup (0FFh)
 
 ; screen_data rb 80*50*2
-; screen_data db 80*50*2 dup (?)    
-screen_data dw 80*50 dup (?)    
+screen_data db 80*50*2 dup (?)    
+; screen_data dw 80*50 dup (?)    
 
 ; DSEG ENDS
 CSEG ENDS
