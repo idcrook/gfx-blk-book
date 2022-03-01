@@ -7,8 +7,27 @@
 ;   enter - do next generation
 ;   escape - exit program
 
-	org	100h
+.model tiny
+; ; CSEG SEGMENT BYTE PUBLIC USE16 'CODE'
+; ; ASSUME CS:CSEG,DS:CSEG,SS:CSEG
+;         ; .code
 
+; ; CSEG		SEGMENT	DWORD PUBLIC USE16 'CODE'
+; ; assume CS:_TEXT, DS:_TEXT, SS:nothing 
+
+; ;  CS:CSEG,DS:CSEG,SS:CSEG
+; 	; org	100h
+; .code 
+; .option segment:use16
+
+; program SEGMENT para USE16
+        ; ASSUME CS:program,DS:program
+
+CSEG		SEGMENT	PARA  USE16 
+	assume CS:_TEXT, DS:_TEXT, ES:_TEXT
+
+        ORG    100h
+start:    
 	mov	di,screen_data
 	xor	al,al
 	mov	cx,80*50*2
@@ -37,20 +56,20 @@
 	mov	cx,80*25
 	rep	stosw
 
-    redraw_screen:
+redraw_screen:
 	mov	si,[cursor_y]
 	imul	si,80
 	add	si,[cursor_x]
-	and	byte [screen_data+si],8
-	or	byte [screen_data+si],2
+	and	byte ptr [screen_data+si],8
+	or	byte ptr [screen_data+si],2
 
 	mov	si,screen_data
 	xor	di,di
 	mov	cx,50
-      draw_screen:
+draw_screen:
 	push	cx
 	mov	cx,80
-      draw_line:
+draw_line:
 	mov	ah,[si+80]
 	lodsb
 	shl	al,4
@@ -63,7 +82,7 @@
 	add	si,80
 	loop	draw_screen
 
-    wait_for_key:
+wait_for_key:
 	xor	ah,ah
 	int	16h
 	cmp	ah,1
@@ -82,47 +101,47 @@
 	je	cursor_down
 	jmp	wait_for_key
 
-    switch_cell:
+switch_cell:
 	mov	si,[cursor_y]
 	imul	si,80
 	add	si,[cursor_x]
-	xor	byte [screen_data+si],8
+	xor	byte ptr [screen_data+si],8
 	jmp	redraw_screen
 
-    cursor_left:
+cursor_left:
 	cmp	[cursor_x],1
 	jbe	wait_for_key
 	call	clear_cursor
-	dec	[cursor_x]
+	dec	byte ptr [cursor_x]
 	jmp	redraw_screen
-    cursor_right:
+cursor_right:
 	cmp	[cursor_x],78
 	jae	wait_for_key
 	call	clear_cursor
-	inc	[cursor_x]
+	inc	byte ptr [cursor_x]
 	jmp	redraw_screen
-    cursor_up:
+cursor_up:
 	cmp	[cursor_y],1
 	jbe	wait_for_key
 	call	clear_cursor
-	dec	[cursor_y]
+	dec	byte ptr [cursor_y]
 	jmp	redraw_screen
-    cursor_down:
+cursor_down:
 	cmp	[cursor_y],48
 	jae	wait_for_key
 	call	clear_cursor
-	inc	[cursor_y]
+	inc	byte ptr [cursor_y]
 	jmp	redraw_screen
 
-    next_generation:
+next_generation:
 	call	clear_cursor
 	mov	si,screen_data+81
 	mov	di,screen_data+80*50+81
 	mov	cx,48
-      process_screen:
+process_screen:
 	push	cx
 	mov	cx,78
-      process_line:
+process_line:
 	xor	bl,bl
 	mov	al,[si+1]
 	and	al,1
@@ -148,19 +167,19 @@
 	mov	al,[si-80-1]
 	and	al,1
 	add	bl,al
-	mov	al,byte [si]
-	mov	byte [di],al
+	mov	al,byte ptr [si]
+	mov	byte ptr [di],al
 	cmp	bl,1
 	jbe	clear_cell
 	cmp	bl,4
 	jae	clear_cell
 	cmp	bl,2
 	je	cell_ok
-	mov	byte [di],0Fh
+	mov	byte ptr [di],0Fh
 	jmp	cell_ok
-      clear_cell:
-	mov	byte [di],0
-      cell_ok:
+clear_cell:
+	mov	byte ptr [di],0
+cell_ok:
 	inc	si
 	inc	di
 	loop	process_line
@@ -168,7 +187,9 @@
 	add	si,2
 	add	di,2
 	loop	process_screen
-	push	es ds
+	; push	es ds
+	push	es
+	push	ds
 	pop	es
 	mov	si,screen_data+80*50
 	mov	di,screen_data
@@ -177,29 +198,42 @@
 	pop	es
 	jmp	redraw_screen
 
-    exit:
+exit:
 	mov	ax,3
 	int	10h
 	int	20h
 
-    clear_cursor:
+clear_cursor:
 	mov	si,[cursor_y]
 	imul	si,80
 	add	si,[cursor_x]
-	mov	al,byte [screen_data+si]
+	mov	al,byte ptr [screen_data+si]
 	cmp	al,2
 	je	empty_cell
-	mov	byte [screen_data+si],0Fh
+	mov	byte ptr [screen_data+si],0Fh
 	ret
-      empty_cell:
-	mov	byte [screen_data+si],0
+empty_cell:
+	mov	byte ptr [screen_data+si],0
 	ret
+; CSEG ENDS
 
+; DSEG SEGMENT	DWORD  USE16 
 cursor_x dw 40
 cursor_y dw 25
+; cursor_x db 40
+; cursor_y db 25
 
 DCh_pattern:
- times 8 db 0
- times 8 db 0FFh
+;  times 8 db 0
+;  times 8 db 0FFh
+ 	db 8 dup (0)
+ 	db 8 dup (0FFh)
 
-screen_data rb 80*50*2
+; screen_data rb 80*50*2
+; screen_data db 80*50*2 dup (?)    
+screen_data dw 80*50 dup (?)    
+
+; DSEG ENDS
+CSEG ENDS
+
+END start
