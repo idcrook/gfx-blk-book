@@ -9,6 +9,12 @@ Inspired to try this after reading
  
  The author of those books was motivated by his own blog coverage and Abrash's book.
 
+
+Maze demo from CH61 CH62 DDJBSP2.zip
+
+![Maze demo from CH61 CH62 DDJBSP2.zip](IMAGES/DDJBSP2-MAZE.png)
+
+
 ## Tools used
 
 On host
