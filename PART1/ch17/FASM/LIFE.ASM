@@ -8,25 +8,21 @@
 ;   escape - exit program
 
 .model tiny
-; ; CSEG SEGMENT BYTE PUBLIC USE16 'CODE'
-; ; ASSUME CS:CSEG,DS:CSEG,SS:CSEG
-;         ; .code
 
-; ; CSEG		SEGMENT	DWORD PUBLIC USE16 'CODE'
-; ; assume CS:_TEXT, DS:_TEXT, SS:nothing 
+; used output of "wdis -a" to obtain this DGROUP template
+; - changed USE32 to USE16 and no longer have 
+;   Warning! W1080: file LIFE.obj is a 32-bit object file
+; DGROUP		GROUP	_TEXT,_DATA
+; _TEXT		SEGMENT	DWORD PUBLIC USE16 'CODE'
+; _TEXT		ENDS
+; _DATA		SEGMENT	DWORD PUBLIC USE16 'DATA'
+; _DATA		ENDS
 
-; ;  CS:CSEG,DS:CSEG,SS:CSEG
-; 	; org	100h
-; .code 
-; .option segment:use16
+CSEG	SEGMENT	PARA  USE16 '_TEXT'
+		assume CS:_TEXT, DS:_TEXT, ES:_TEXT
 
-; program SEGMENT para USE16
-        ; ASSUME CS:program,DS:program
+ORG    100h
 
-CSEG		SEGMENT	PARA  USE16 
-	assume CS:_TEXT, DS:_TEXT, ES:_TEXT
-
-        ORG    100h
 start:    
 	mov	di, offset screen_data
 	xor	al,al
@@ -215,13 +211,9 @@ clear_cursor:
 empty_cell:
 	mov	byte ptr [screen_data+si],0
 	ret
-; CSEG ENDS
 
-; DSEG SEGMENT	DWORD  USE16 
 cursor_x dw 40
 cursor_y dw 25
-; cursor_x db 40
-; cursor_y db 25
 
 DCh_pattern:
 ;  times 8 db 0
@@ -231,9 +223,7 @@ DCh_pattern:
 
 ; screen_data rb 80*50*2
 screen_data db 80*50*2 dup (?)    
-; screen_data dw 80*50 dup (?)    
 
-; DSEG ENDS
 CSEG ENDS
 
 END start
